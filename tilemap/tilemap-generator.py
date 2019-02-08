@@ -29,9 +29,8 @@ ressources = [DIRT, GRASS, WATER, SAND]
 #INIT GRAPHICS
 pygame.init()
 DISPLAY = pygame.display.set_mode((width*size,height*size+80))
-pygame.display.set_caption("First game")
+pygame.display.set_caption("Tilemap Generator")
 
-INVFONT = pygame.font.Font("Aldo.ttf",18)
 
 selectedTile=DIRT
 
@@ -44,33 +43,19 @@ while True:
             if x >0 and x < size*width and y < height*size and y>0:
                 tiles[int(y/size)][int(x/size)]=selectedTile
             
-            if y> height*size:
+            if y> height*size and x<(width-1)*size:
                 selectedTile=ressources[int(x/size)]
                 print(selectedTile)
+            
+            #SAVE BUTTON
+            if y> height*size and x>(width-1)*size:
+                save =  open('save.txt', 'w')
+                for tile in tiles:
+                    save.write("%s\n" % tile)
+                save.close()
         if event.type == pygame.QUIT:
             pygame.quit()
-            sys.exit()
-        elif event.type == pygame.KEYDOWN:
-            print(event.key)
-#            if event.key==K_RIGHT and playerPos[0]<width-1:
-#                playerPos[0]+=1
-#            elif event.key == K_LEFT and playerPos[0]>0:
-#                playerPos[0]-=1
-#            elif event.key == K_UP and playerPos[1]>0:
-#                playerPos[1]-=1
-#            elif event.key == K_DOWN and playerPos[1]<height-1:
-#                playerPos[1]+=1
-#            if event.key == K_SPACE:
-#                currentTile=tiles[playerPos[1]][playerPos[0]]
-#                inventory[currentTile]+=1
-#                tiles[playerPos[1]][playerPos[0]] = DIRT
-#                print(inventory)
-#            if event.key == K_1:
-#                currentTile=tiles[playerPos[1]][playerPos[0]]
-#                if inventory[DIRT]>0:
-#                    inventory[DIRT]-=1
-#                    tiles[playerPos[1]][playerPos[0]]=DIRT
-                    
+            sys.exit()                   
         
     
     for row in range(height):
@@ -82,6 +67,10 @@ while True:
         #Image
         DISPLAY.blit(textures[item],(placePos, height*size))
         placePos+=size
+    
+    posSauv = ((width-1)*size,(height-1)*size)
+    pygame.draw.rect(DISPLAY, (0,255,255), ((width-1)*size,
+                     (height)*size,(width)*size,(height-1)*size))
     
     pygame.display.update()
 
